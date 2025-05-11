@@ -1,1 +1,138 @@
-# distance-between-us
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Letters Between Us</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #ffe6f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      display: none;
+      max-width: 600px;
+      background: #fff0f5;
+      padding: 20px;
+      margin-top: 50px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+    }
+
+    h1 {
+      color: #d63384;
+      text-align: center;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ffb6c1;
+      resize: none;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .letters {
+      margin-top: 20px;
+    }
+
+    .letter {
+      background: #ffe6ea;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #f5b0c9;
+    }
+
+    #passwordPrompt {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ffb6c1;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="passwordPrompt">
+  <h2>Enter Password to Continue</h2>
+  <input type="password" id="passwordInput" placeholder="Enter password" />
+  <br>
+  <button onclick="checkPassword()">Unlock</button>
+</div>
+
+<div class="container" id="mainContent">
+  <h1>Letters Between Us</h1>
+  <textarea id="letterInput" placeholder="Write your letter here..."></textarea>
+  <br>
+  <button onclick="saveLetter()">Send Letter</button>
+
+  <div class="letters" id="lettersDisplay">
+    <h3>Previous Letters</h3>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "Aditiya";
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value;
+    if (input === PASSWORD) {
+      document.getElementById("passwordPrompt").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      loadLetters();
+    } else {
+      alert("Wrong password!");
+    }
+  }
+
+  function saveLetter() {
+    const input = document.getElementById("letterInput");
+    const content = input.value.trim();
+    if (content) {
+      const letters = JSON.parse(localStorage.getItem("letters")) || [];
+      letters.unshift({ text: content, date: new Date().toLocaleString() });
+      localStorage.setItem("letters", JSON.stringify(letters));
+      input.value = "";
+      loadLetters();
+    }
+  }
+
+  function loadLetters() {
+    const container = document.getElementById("lettersDisplay");
+    const letters = JSON.parse(localStorage.getItem("letters")) || [];
+    container.innerHTML = "<h3>Previous Letters</h3>";
+    letters.forEach(letter => {
+      const div = document.createElement("div");
+      div.className = "letter";
+      div.innerHTML = `<strong>${letter.date}</strong><br>${letter.text}`;
+      container.appendChild(div);
+    });
+  }
+</script>
+
+</body>
+</html>
